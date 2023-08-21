@@ -30,21 +30,19 @@ input=sys.stdin.readline
 #입력
 N=int(input())
 adjList=[0 for _ in range(N+1)]
-visited=[False for _ in range(N+1)]
+is_cycle=[False for _ in range(N+1)]
 answer=0
 answerlist=list()
 for i in range(1,N+1):
     start=i
     end=int(input())
     adjList[start]=end
-print(adjList)
 
 #함수
 #발생할 수 있는 모든 사이클을 찾아야 하지 않나->완탐식 접근
-#노드에 현재 정점과 가중치를 가지는 노드를 만들어서 bfs를 돌리고 이미 방문한 정점으로 가면
-#가중치를 1 늘리고 정답과 비교하는겨
-#그거를 모든 정점에 대해서 하는거지
-#단방향->간선도 100개, 시간초과 안날거같음
+#모든 정점마다의 사이클을 분석한다.
+#간선이 1개씩이므로 나에서 출발해서 나에서 돌아오면 사이클임.
+
 def bfs(begin):
     #덱을 만들어서 시작정점을 넣고
     global answer, N,answerlist
@@ -57,26 +55,25 @@ def bfs(begin):
     while len(q)!=0:
         temp=q.popleft()
         #현재 정점[0]에서 갈 수 있는 정점을 탐색함
-        print(temp)
         temp[1].append(adjList[temp[0]])
-        print(temp[1])
+        #다음정점이 출발점이라면,
+        if adjList[temp[0]]==begin:
+            for j in temp[1]:
+                is_cycle[j]=True
         if not visited[adjList[temp[0]]]:
             visited[adjList[temp[0]]]=True
             q.append([adjList[temp[0]],temp[1]])
             continue
-        if 
-        if answer<len(temp[1]):
-            answer=len(temp[1])
-            answerlist=temp[1][:]
-        if answer == N:
-            print(answer)
-            for j in temp[1]:
-                print(j)
-            exit(0)
 
 #실행
 for i in range(1,N+1):
+    visited=[False for _ in range(N+1)]
     bfs(i)
+
+for i in is_cycle:
+    if i:
+        answer+=1
 print(answer)
-for i in answerlist:
-    print(i)
+for i in range(1,N+1):
+    if is_cycle[i]:
+        print(i)
