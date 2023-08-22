@@ -20,8 +20,11 @@ input=sys.stdin.readline
 #음
 #완탐으로 먼저 풀이
 
-N,C=map(int,input().split())
 
+
+#입력부
+answer=0
+N,C=map(int,input().split())
 
 houseList=[]
 maxlen=0
@@ -29,4 +32,36 @@ for i in range(N):
     temp=int(input())
     maxlen=max(temp,maxlen)
     houseList.append(temp)
-houseMap=[0 for i in range(maxlen)]
+houseList.sort()
+
+
+#함수부
+
+#시간초과 해결 로직
+#두 공유기 사이의 거리를 임의로 설정하고, 공유기를 놓을 수 있으면
+#거리를 늘려보고, 없으면 거리를 줄여보는 방식으로, 구현하자
+def BinarySet(start,end):
+    global answer
+
+    while start<=end:
+        mid=(start+end)//2
+        #mid를 최소거리로 해서 놓고 놓아지면 거리를 늘려보고
+        if SetMap(mid)>= C:
+            answer=max(mid,answer)
+            start=mid+1
+        #안놓아지면 거리를 줄이자.
+        else:
+            end=mid-1
+    return
+#해당 거리대로 공유기를 놓을 수 있는지 테스트해보기
+def SetMap(mid):
+    tempcount=1
+    before=houseList[0]
+    for i in range(1,N):
+        if houseList[i]-before>=mid:
+            tempcount+=1
+            before=houseList[i]
+    return tempcount
+
+BinarySet(0,maxlen)
+print(answer)
