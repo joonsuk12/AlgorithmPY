@@ -1,4 +1,5 @@
 import sys
+from collections import defaultdict
 input=sys.stdin.readline
 
 '''
@@ -27,22 +28,29 @@ def madeSumList():
     for j in range(1,N+1):
         range_sum_B[j]=range_sum_B[j-1]+B[j]
 
-#만들어진 누적합 배열으로 일치하는 구간 찾기.
-#같은 구간을 체크하면서 넘어가야하나.
-#완탐으로 먼저 풀어보자
-def findNumPair():
-    global answer
-    #모든 자리에서 모든 부분수열을 체크하기
-    for i in range(0,N+1):
-        for j in range(i+1,N+1):
-            if range_sum_B[j]-range_sum_B[i]==range_sum_A[j]-range_sum_A[i]:
-                answer+=1
 
 #시간초과 로직을 해결합시다
+#i번째 까지의 두 수열의 누적합의 차가 이전에 계산된 차가 있다면, 정답 1증가
+#아니면, 딕셔너리의 키에 추가
+def findPairTime():
+    global answer
+    sumdict=defaultdict(int)
+    for i in range(1,N+1):
+        gap=range_sum_A[i]-range_sum_B[i]
+        if gap==0:
+            sumdict[0]+=1
+            answer+=sumdict[gap]
+            continue
+        if sumdict[gap]!=0:
+            answer+=sumdict[gap]
+            sumdict[gap]+=1
+        else:
+            sumdict[gap]=1
+
 #실행
 def solution():
     madeSumList()
-    findNumPair();
+    findPairTime()
     print(answer)
     return
 
