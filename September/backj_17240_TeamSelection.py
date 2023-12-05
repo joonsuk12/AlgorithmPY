@@ -28,35 +28,51 @@ max_list=[0,0,0,0,0]
 answer=0
 N=int(input())
 selected=[False for i in range(N)]
+range_dict=dict()
+range_dict={0:'a',1:'b',2:'c',3:'d',4:'e'}
+all_point_list=[]
+
 a=[0 for i in range(N)]; b=[0 for i in range(N)];
 c=[0 for i in range(N)]; d=[0 for i in range(N)]; e=[0 for i in range(N)]
 
 #200000000
-#두번정도 까지는 괜찮아보이는데.
+#인덱스의 위치 이후로 최대
 max_list[4]=max(e)
 max_list[3]=max(d)+max(e)
 max_list[2]=max(e)+max(d)+max(c)
-max_list[1]=max(e)+max(d)+max(c)+max(d)
+max_list[1]=max(e)+max(d)+max(c)+max(b)
+max_list[0]=max(a)+max(e)+max(d)+max(c)+max(b)
 
 for i in range(N):
     ta,tb,tc,td,te=map(int,input().split())
     a[i]=ta; b[i]=tb; c[i]=tc; d[i]=td; e[i]=te
 #함수
-
+all_point_list.append(a)
 #뽑히지 않은 애들 중에서 최대를 뽑고 넘어가보는 함수.
 #근데 이거 디피아님? 오 배열이 터질듯...
+def pick(cnt, i):
+
+    pass
+
+
 def pick_player(cnt, temp_sum):
     global answer
     #기저조건
-    if cnt==N:
+    if cnt==5:
         answer=max(answer,temp_sum)
         return
     #백트조건, 현재 임시합에 뒤에서의 최선의 결과(!)를 더해도 정답보다 작으면 가지치기
-
+    if temp_sum+max_list[cnt]<answer:
+        return
     #실행문, 현재선택에서 항상 최선의 선택을 먼저 해보고 이동하자.
     for i in range(N):
-
-
+        if selected[i]: continue
+        #선택 안 된 애들 중에서 가장 큰 녀석을 골라보고
+        selected[i]=True
+        pick_player(cnt+1,temp_sum+pick(cnt,i))
+        selected[i]=False
     return
-#
-# #실
+
+#실
+pick_player(0,0)
+print(answer)
